@@ -4,6 +4,7 @@
   before_filter :correct_user, only: [:edit, :update]
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def new
@@ -13,6 +14,7 @@
   def create
     @user = User.new(params[:user])
     if @user.save
+      sign_in @user
       flash[:success] = "Welcome to the Sample App!"
       redirect_to @user
     else
@@ -60,5 +62,5 @@
     def admin_user
       redirect_to(root_path) unless current_user.admin?
     end
-    
+
 end
